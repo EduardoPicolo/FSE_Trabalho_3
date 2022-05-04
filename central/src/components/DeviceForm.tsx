@@ -25,47 +25,26 @@ interface DeviceFormProps {
 }
 
 export const DeviceForm = ({ initialValues, isOpen }: DeviceFormProps) => {
-  const { isFormOpen, publishMessages } = useDevices()
-
-  //   const incommingMessageHandlers = useRef([
-  //     {
-  //       topic: '/esp/test',
-  //       handler: (msg) => {
-  //         // addMessage(msg)
-  //         console.log('Message received aqui: ', msg)
-  //       }
-  //     }
-  //   ])
-
-  //   useMqttConnect({
-  //     uri: 'mqtt://broker.hivemq.com:8000/mqtt',
-  //     topicHandlers: incommingMessageHandlers.current
-  //   })
-
-  //   const publishMessages = () => {
-  //     if (!mqttClientRef.current) {
-  //       console.log(
-  //         '(publishMessages) Cannot publish, mqttClient: ',
-  //         mqttClientRef.current
-  //       )
-
-  //       return
-  //     }
-
-  //     mqttClientRef.current.publish('/esp/test', '1st message from component')
-  //   }
-
-  //   useMqttConnect()
+  const { isFormOpen, publishMessages, toggleForm } = useDevices()
 
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting }
+    formState: { errors, isSubmitting },
+    reset,
+    trigger
   } = useForm<FormValues>({
     defaultValues: initialValues
   })
 
-  const onSubmit = useCallback((data: FormValues) => console.log(data), [])
+  const onSubmit = useCallback(
+    (data: FormValues) => {
+      console.log(data)
+      toggleForm(false)
+      reset()
+    },
+    [toggleForm]
+  )
 
   return (
     <Modal
@@ -73,9 +52,11 @@ export const DeviceForm = ({ initialValues, isOpen }: DeviceFormProps) => {
       isOpen={isFormOpen}
       onClose={() => {}}
       closeOnOverlayClick={false}
+      onOverlayClick={() => trigger()}
       size="md"
+      isCentered
     >
-      <Button onClick={() => publishMessages()}>TESTE</Button>
+      {/* <Button onClick={() => publishMessages()}>TESTE</Button> */}
       <form onSubmit={handleSubmit(onSubmit)}>
         <FormControl isInvalid={Object.keys(errors).length > 0} isRequired>
           <Stack spacing={4}>

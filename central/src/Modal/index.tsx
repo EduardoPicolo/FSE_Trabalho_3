@@ -16,7 +16,7 @@ export const Modal: React.FC<ModalPropss> = ({ children, title, ...props }) => {
     <ModalContainer {...props}>
       <ModalOverlay
         bg="blackAlpha.300"
-        backdropFilter="blur(9px) hue-rotate(90deg)"
+        backdropFilter="blur(12px) hue-rotate(45deg)"
       />
       <ModalContent>
         <ModalHeader>{title}</ModalHeader>

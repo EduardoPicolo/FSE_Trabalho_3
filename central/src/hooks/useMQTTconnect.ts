@@ -10,12 +10,12 @@ const connect_options = {
 const subscribe_options = { qos: 2 }
 const publish_options = { qos: 2, retain: false }
 
-const topics = {
-  register: '/fse2021/180122258/dipositivos/+',
-  temperature: '/fse2021/180122258/+/temperatura',
-  humidity: '/fse2021/180122258/+/umidade',
-  state: '/fse2021/180122258/+/estado'
-}
+// const topics = {
+//   register: '/fse2021/180122258/dipositivos/+',
+//   temperature: '/fse2021/180122258/+/temperatura',
+//   humidity: '/fse2021/180122258/+/umidade',
+//   state: '/fse2021/180122258/+/estado'
+// }
 
 interface useMqttConnectProps {
   uri: string

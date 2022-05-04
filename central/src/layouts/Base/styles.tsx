@@ -16,8 +16,8 @@ export const Video = styled.video`
 export const Main = styled.main`
   position: relative;
   display: grid;
-  /* width: 100%; */
   width: auto;
+  /* min-width: 600px; */
   min-height: 85vh;
   padding: 2rem;
   border-radius: 16px;

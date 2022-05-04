@@ -12,11 +12,13 @@ import { client, useMqttConnect } from '@hooks/useMQTTconnect'
 export type DevicesContextType = {
   isFormOpen: boolean
   publishMessages: () => void
+  toggleForm: (state?: boolean) => void
 }
 
 export const CentralServerDefaultValues: DevicesContextType = {
   isFormOpen: false,
-  publishMessages: () => ({})
+  publishMessages: () => ({}),
+  toggleForm: () => ({})
 }
 
 export const DevicesContext = createContext<DevicesContextType>(
@@ -31,6 +33,12 @@ export const DevicesProvider: React.FC<DevicesProviderProps> = ({
   children
 }) => {
   const [isFormOpen, setIsFormOpen] = useState(false)
+
+  const toggleForm = useCallback(
+    (state?: boolean) =>
+      setIsFormOpen(state !== undefined ? state : !isFormOpen),
+    [isFormOpen]
+  )
 
   const incommingMessageHandlers = useRef<
     {
@@ -91,9 +99,10 @@ export const DevicesProvider: React.FC<DevicesProviderProps> = ({
   const value = useMemo(
     () => ({
       isFormOpen,
-      publishMessages
+      publishMessages,
+      toggleForm
     }),
-    [isFormOpen, publishMessages]
+    [isFormOpen, publishMessages, toggleForm]
   )
 
   return (
