@@ -2,23 +2,23 @@ interface Device {
   mac: string
   room: string
   battery: boolean
-  input_name: string
-  output_name?: string
+  inputName: string
+  outputName?: string
 }
 
-type Event = {
+type DistributedEvent = {
   mode: 'register' | 're-register'
 }
 
-interface RegisterEvent extends Event {
+interface RegisterEvent extends DistributedEvent {
   mode: 'register'
   battery: boolean
 }
 
-interface ReRegisterEvent extends Event {
+interface ReRegisterEvent extends DistributedEvent {
   mode: 're-register'
   battery: boolean
   room: string
-  input_name: string
-  output_name?: string
+  inputName: string
+  outputName?: string
 }

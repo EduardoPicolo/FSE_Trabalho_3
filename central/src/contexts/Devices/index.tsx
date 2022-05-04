@@ -3,22 +3,32 @@ import React, {
   useCallback,
   useContext,
   useMemo,
+  useReducer,
   useRef,
   useState
 } from 'react'
 
+import { MQTT_TOPICS, Topics } from '@constants/topics'
 import { client, useMqttConnect } from '@hooks/useMQTTconnect'
 
+import { ACTIONS, stateReducer } from './reducer'
+
 export type DevicesContextType = {
+  devices: Device[]
+  addDevice: (device: Device) => void
   isFormOpen: boolean
-  publishMessages: () => void
+  publishMessages: (topic: Topics, message: string) => void
   toggleForm: (state?: boolean) => void
+  currentMac: string
 }
 
 export const CentralServerDefaultValues: DevicesContextType = {
+  devices: [],
+  addDevice: () => ({}),
   isFormOpen: false,
   publishMessages: () => ({}),
-  toggleForm: () => ({})
+  toggleForm: () => ({}),
+  currentMac: ''
 }
 
 export const DevicesContext = createContext<DevicesContextType>(
@@ -32,7 +42,19 @@ interface DevicesProviderProps {
 export const DevicesProvider: React.FC<DevicesProviderProps> = ({
   children
 }) => {
-  const [isFormOpen, setIsFormOpen] = useState(false)
+  const [devices, dispatchEvent] = useReducer(stateReducer, [] as Device[])
+  console.log('DevicesProvider: ', devices)
+
+  const addDevice = useCallback((device: Device) => {
+    dispatchEvent({
+      type: ACTIONS.ADD_DEVICE,
+      payload: device
+    })
+  }, [])
+
+  const [isFormOpen, setIsFormOpen] = useState<boolean>(false)
+
+  const [currentMac, setCurrentMac] = useState<string>('')
 
   const toggleForm = useCallback(
     (state?: boolean) =>
@@ -49,32 +71,32 @@ export const DevicesProvider: React.FC<DevicesProviderProps> = ({
     {
       topic: '/esp/test',
       handler: (msg) => {
-        // addMessage(msg)
         console.log('Message received aqui: TESTE: ', msg)
       }
     },
     {
-      topic: '/fse2021/180122258/dipositivos/+',
+      topic: MQTT_TOPICS.REGISTER,
       handler: (msg) => {
-        // addMessage(msg)
         console.log('Message received: register: ', msg)
+        if (msg.payload.mode !== 'register') return
         setIsFormOpen(true)
+        setCurrentMac(msg.topic.split('/')[4])
       }
     },
     {
-      topic: '/fse2021/180122258/+/temperatura',
+      topic: MQTT_TOPICS.TEMPERATURE,
       handler: (msg) => {
         console.log('Message received: temperatura: ', msg)
       }
     },
     {
-      topic: '/fse2021/180122258/+/umidade',
+      topic: MQTT_TOPICS.HUMIDITY,
       handler: (msg) => {
         console.log('Message received: umidade: ', msg)
       }
     },
     {
-      topic: '/fse2021/180122258/+/estado',
+      topic: MQTT_TOPICS.STATE,
       handler: (msg) => {
         console.log('Message received: estado: ', msg)
       }
@@ -86,23 +108,26 @@ export const DevicesProvider: React.FC<DevicesProviderProps> = ({
     topicHandlers: incommingMessageHandlers.current
   })
 
-  const publishMessages = useCallback(() => {
+  const publishMessages = useCallback((topic: Topics, message: string) => {
     if (!client) {
       console.log('(publishMessages) Cannot publish, mqttClient: ', client)
 
       return
     }
 
-    client?.publish('/esp/test', '1st message from component')
+    client?.publish(topic, message)
   }, [])
 
   const value = useMemo(
     () => ({
+      devices,
+      addDevice,
       isFormOpen,
       publishMessages,
-      toggleForm
+      toggleForm,
+      currentMac
     }),
-    [isFormOpen, publishMessages, toggleForm]
+    [addDevice, currentMac, devices, isFormOpen, publishMessages, toggleForm]
   )
 
   return (

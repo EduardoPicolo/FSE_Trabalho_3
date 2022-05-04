@@ -18,7 +18,7 @@ export const Modal: React.FC<ModalPropss> = ({ children, title, ...props }) => {
         bg="blackAlpha.300"
         backdropFilter="blur(12px) hue-rotate(45deg)"
       />
-      <ModalContent>
+      <ModalContent padding={2}>
         <ModalHeader>{title}</ModalHeader>
         <ModalBody>{children}</ModalBody>
       </ModalContent>

@@ -3,9 +3,7 @@ import type { NextPage } from 'next'
 import { DeviceForm } from '@components/DeviceForm'
 
 const Home: NextPage = () => {
-  //   useMqttConnect()
-
-  return <DeviceForm isOpen={true} />
+  return <DeviceForm />
 }
 
 export default Home

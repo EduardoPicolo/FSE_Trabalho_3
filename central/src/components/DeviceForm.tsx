@@ -11,6 +11,7 @@ import {
 } from '@chakra-ui/react'
 import { Modal } from 'Modal'
 
+import { MQTT_TOPICS } from '@constants/topics'
 import { useDevices } from '@contexts/Devices'
 
 type FormValues = {
@@ -20,12 +21,12 @@ type FormValues = {
 }
 
 interface DeviceFormProps {
-  isOpen: boolean
   initialValues?: Device
 }
 
-export const DeviceForm = ({ initialValues, isOpen }: DeviceFormProps) => {
-  const { isFormOpen, publishMessages, toggleForm } = useDevices()
+export const DeviceForm = ({ initialValues }: DeviceFormProps) => {
+  const { isFormOpen, publishMessages, addDevice, toggleForm, currentMac } =
+    useDevices()
 
   const {
     register,
@@ -40,10 +41,23 @@ export const DeviceForm = ({ initialValues, isOpen }: DeviceFormProps) => {
   const onSubmit = useCallback(
     (data: FormValues) => {
       console.log(data)
+      publishMessages(
+        ('/fse2021/180122258/dipositivos/' +
+          currentMac) as MQTT_TOPICS.REGISTER,
+        JSON.stringify(data)
+      )
+      addDevice({ ...data, battery: !!initialValues?.battery, mac: currentMac })
       toggleForm(false)
       reset()
     },
-    [toggleForm]
+    [
+      addDevice,
+      currentMac,
+      initialValues?.battery,
+      publishMessages,
+      reset,
+      toggleForm
+    ]
   )
 
   return (
@@ -52,7 +66,7 @@ export const DeviceForm = ({ initialValues, isOpen }: DeviceFormProps) => {
       isOpen={isFormOpen}
       onClose={() => {}}
       closeOnOverlayClick={false}
-      onOverlayClick={() => trigger()}
+      onOverlayClick={trigger}
       size="md"
       isCentered
     >

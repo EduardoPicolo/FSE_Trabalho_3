@@ -76,9 +76,11 @@ export function useMqttConnect({
         try {
           payload = JSON.parse(rawPayload?.toString?.())
         } catch {
+          console.log('error parsing payload')
           payload = rawPayload?.toString?.()
         }
 
+        console.log('PAYLOAD RECEIVED: ', payload)
         if (th) th.handler({ topic, payload, packet })
       })
     } else {
