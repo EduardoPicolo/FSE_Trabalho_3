@@ -1,4 +1,4 @@
-import { useCallback } from 'react'
+import { useCallback, useEffect, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
 import {
   Box,
@@ -18,15 +18,18 @@ type FormValues = {
   room: string
   inputName: string
   outputName?: string
+  state?: number
 }
 
-interface DeviceFormProps {
-  initialValues?: Device
-}
-
-export const DeviceForm = ({ initialValues }: DeviceFormProps) => {
-  const { isFormOpen, publishMessages, addDevice, toggleForm, currentMac } =
-    useDevices()
+export const DeviceForm = () => {
+  const {
+    isFormOpen,
+    publishMessages,
+    addDevice,
+    toggleForm,
+    currentMac,
+    initialFormValues
+  } = useDevices()
 
   const {
     register,
@@ -35,29 +38,31 @@ export const DeviceForm = ({ initialValues }: DeviceFormProps) => {
     reset,
     trigger
   } = useForm<FormValues>({
-    defaultValues: initialValues
+    defaultValues: useMemo(() => initialFormValues, [initialFormValues])
   })
+
+  useEffect(() => {
+    reset(initialFormValues)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialFormValues])
 
   const onSubmit = useCallback(
     (data: FormValues) => {
       console.log(data)
       publishMessages(
-        ('/fse2021/180122258/dipositivos/' +
-          currentMac) as MQTT_TOPICS.REGISTER,
-        JSON.stringify(data)
+        ('/fse2021/180122258/dipositivos/' + currentMac) as MQTT_TOPICS.DEVICE,
+        JSON.stringify({ ...data, state: 0 })
       )
-      addDevice({ ...data, battery: !!initialValues?.battery, mac: currentMac })
+      addDevice({
+        state: 0,
+        battery: false,
+        ...data,
+        mac: currentMac
+      })
       toggleForm(false)
       reset()
     },
-    [
-      addDevice,
-      currentMac,
-      initialValues?.battery,
-      publishMessages,
-      reset,
-      toggleForm
-    ]
+    [addDevice, currentMac, publishMessages, reset, toggleForm]
   )
 
   return (
@@ -106,13 +111,14 @@ export const DeviceForm = ({ initialValues }: DeviceFormProps) => {
                 })}
                 variant="flushed"
                 isInvalid={!!errors?.inputName}
+                disabled={!!initialFormValues?.inputName}
               />
               <FormErrorMessage>
                 {errors?.inputName && errors.inputName.message}
               </FormErrorMessage>
             </Box>
 
-            {initialValues?.battery && (
+            {!initialFormValues?.battery && (
               <Box>
                 <FormLabel htmlFor="outputName" margin={0}>
                   Device name
@@ -129,6 +135,7 @@ export const DeviceForm = ({ initialValues }: DeviceFormProps) => {
                   })}
                   variant="flushed"
                   isInvalid={!!errors?.outputName}
+                  disabled={!!initialFormValues?.outputName}
                 />
                 <FormErrorMessage>
                   {errors?.outputName && errors.outputName.message}
