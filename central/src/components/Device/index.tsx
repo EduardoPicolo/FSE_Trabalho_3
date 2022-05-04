@@ -81,15 +81,15 @@ export const Device = ({ device }: DeviceProps) => {
                 {
                   true: <SunIcon color="cyan.500" />,
                   false: <SunIcon color="whiteAlpha.600" />
-                }[Boolean(device.state)?.toString?.()]
+                }[Boolean(device.inputState)?.toString?.()]
               }
               <Text
                 as="span"
                 fontSize="xs"
                 fontWeight="light"
-                color={device.state ? 'cyan' : 'whiteAlpha.600'}
+                color={device.inputState ? 'cyan' : 'whiteAlpha.600'}
               >
-                {device.state ? 'ON' : 'OFF'}
+                {device.inputState ? 'ON' : 'OFF'}
               </Text>
             </Flex>
           </StatNumber>

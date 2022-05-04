@@ -21,12 +21,18 @@ export const OutputSwitch = ({ device }: OutputSwitchProps) => {
 
   const handleChange: ChangeEventHandler<HTMLInputElement> = useCallback(
     (event) => {
-      const updatedDevice = { ...device, state: event.target.checked ? 1 : 0 }
+      const updatedDevice = {
+        ...device,
+        outputState: event.target.checked ? 1 : 0
+      }
       updateDevice(updatedDevice)
 
       publishMessages(
         ('/fse2021/180122258/dipositivos/' + device.mac) as MQTT_TOPICS.DEVICE,
-        JSON.stringify({ mode: 'update', state: updatedDevice.state })
+        JSON.stringify({
+          mode: 'update',
+          state: updatedDevice.outputState
+        })
       )
     },
     [device, publishMessages, updateDevice]
@@ -49,7 +55,7 @@ export const OutputSwitch = ({ device }: OutputSwitchProps) => {
           </FormLabel>
           <Switch
             id="output"
-            isChecked={!!device.state}
+            isChecked={!!device.outputState}
             onChange={handleChange}
             size="lg"
             colorScheme="teal"
@@ -57,8 +63,8 @@ export const OutputSwitch = ({ device }: OutputSwitchProps) => {
         </FormControl>
 
         <Icon
-          as={device.state ? BsLightningChargeFill : BsLightningCharge}
-          color={device.state ? 'cyan' : 'whiteAlpha.600'}
+          as={device.outputState ? BsLightningChargeFill : BsLightningCharge}
+          color={device.outputState ? 'cyan' : 'whiteAlpha.600'}
           w={21}
           h={21}
         />

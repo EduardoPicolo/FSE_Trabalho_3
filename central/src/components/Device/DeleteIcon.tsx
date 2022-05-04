@@ -10,14 +10,15 @@ interface DeleteIconProps {
 }
 
 export const DeleteIcon = ({ device }: DeleteIconProps) => {
-  const { publishMessages } = useDevices()
+  const { publishMessages, removeDevice } = useDevices()
 
   const handleClick = useCallback(() => {
     publishMessages(
       ('/fse2021/180122258/dipositivos/' + device.mac) as MQTT_TOPICS.DEVICE,
       JSON.stringify({ mode: 'unregister' })
     )
-  }, [device.mac, publishMessages])
+    removeDevice(device)
+  }, [device, publishMessages, removeDevice])
 
   return (
     <Tooltip

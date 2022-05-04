@@ -17,6 +17,7 @@ export type DevicesContextType = {
   devices: Device[]
   addDevice: (device: Device) => void
   updateDevice: (device: Device) => void
+  removeDevice: (device: Device) => void
   isFormOpen: boolean
   initialFormValues: Device | undefined
   publishMessages: (topic: Topics, message: string) => void
@@ -28,6 +29,7 @@ export const CentralServerDefaultValues: DevicesContextType = {
   devices: [],
   addDevice: () => ({}),
   updateDevice: () => ({}),
+  removeDevice: () => ({}),
   isFormOpen: false,
   initialFormValues: undefined,
   publishMessages: () => ({}),
@@ -81,6 +83,13 @@ export const DevicesProvider: React.FC<DevicesProviderProps> = ({
     setCurrentMac('')
   }, [])
 
+  const removeDevice = useCallback((device: Device) => {
+    dispatchEvent({
+      type: ACTIONS.REMOVE_DEVICE,
+      payload: device
+    })
+  }, [])
+
   const updateDevice = useCallback((device: Device) => {
     dispatchEvent({
       type: ACTIONS.UPDATE_DEVICE,
@@ -118,7 +127,7 @@ export const DevicesProvider: React.FC<DevicesProviderProps> = ({
         setCurrentMac(mac)
         // @ts-expect-error Ignore harmless error
         delete msg.payload.mode
-        setInitialValues({ ...msg.payload, mac } as Device)
+        setInitialValues({ ...msg.payload, inputState: 0, mac } as Device)
       }
     },
     {
@@ -137,6 +146,12 @@ export const DevicesProvider: React.FC<DevicesProviderProps> = ({
       topic: MQTT_TOPICS.STATE,
       handler: (msg) => {
         console.log('Message received: estado: ', msg)
+        if (msg.payload.mode !== 'update') return
+        console.log('UPDATE DEVICE', msg.payload.state)
+        dispatchEvent({
+          type: ACTIONS.UPDATE_DEVICE,
+          payload: { mac: msg.payload.mac, inputState: msg.payload.state }
+        })
       }
     }
   ])
@@ -161,6 +176,7 @@ export const DevicesProvider: React.FC<DevicesProviderProps> = ({
       devices,
       addDevice,
       updateDevice,
+      removeDevice,
       isFormOpen,
       initialFormValues,
       publishMessages,
@@ -174,6 +190,7 @@ export const DevicesProvider: React.FC<DevicesProviderProps> = ({
       initialFormValues,
       isFormOpen,
       publishMessages,
+      removeDevice,
       toggleForm,
       updateDevice
     ]

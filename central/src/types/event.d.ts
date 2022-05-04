@@ -3,14 +3,14 @@ interface Device {
   room: string
   battery: boolean
   inputName: string
+  inputState: number
   outputName?: string
-  state: number
+  outputState?: number
 }
 
 type DistributedEvent = {
   mode: 'register' | 're-register'
   battery: boolean
-  state: number
 }
 
 interface RegisterEvent extends DistributedEvent {
@@ -22,4 +22,10 @@ interface ReRegisterEvent extends DistributedEvent {
   room: string
   inputName: string
   outputName?: string
+}
+
+interface UpdateEvent {
+  mode: 'update'
+  mac: string
+  state: number
 }

@@ -54,7 +54,8 @@ export const DeviceForm = () => {
         JSON.stringify({ ...data, state: 0 })
       )
       addDevice({
-        state: 0,
+        inputState: 0,
+        outputState: 0,
         battery: false,
         ...data,
         mac: currentMac
