@@ -75,7 +75,6 @@ export const DeviceForm = () => {
       size="md"
       isCentered
     >
-      {/* <Button onClick={() => publishMessages()}>TESTE</Button> */}
       <form onSubmit={handleSubmit(onSubmit)}>
         <FormControl isInvalid={Object.keys(errors).length > 0} isRequired>
           <Stack spacing={4}>

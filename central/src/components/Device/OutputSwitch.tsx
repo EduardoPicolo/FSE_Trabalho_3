@@ -1,5 +1,13 @@
 import { ChangeEventHandler, useCallback } from 'react'
-import { Divider, FormControl, FormLabel, Switch } from '@chakra-ui/react'
+import { BsLightningCharge, BsLightningChargeFill } from 'react-icons/bs'
+import {
+  Divider,
+  Flex,
+  FormControl,
+  FormLabel,
+  Icon,
+  Switch
+} from '@chakra-ui/react'
 
 import { MQTT_TOPICS } from '@constants/topics'
 import { useDevices } from '@contexts/Devices'
@@ -29,23 +37,32 @@ export const OutputSwitch = ({ device }: OutputSwitchProps) => {
     <>
       <Divider backgroundColor="whiteAlpha.900" />
 
-      <FormControl display="flex" alignItems="center">
-        <FormLabel
-          htmlFor="output"
-          mb="0"
-          color="white"
-          textTransform="capitalize"
-        >
-          {device.outputName}
-        </FormLabel>
-        <Switch
-          id="output"
-          isChecked={!!device.state}
-          onChange={handleChange}
-          size="lg"
-          colorScheme="teal"
+      <Flex alignItems="center">
+        <FormControl display="flex" alignItems="center">
+          <FormLabel
+            htmlFor="output"
+            mb="0"
+            color="white"
+            textTransform="capitalize"
+          >
+            {device.outputName}
+          </FormLabel>
+          <Switch
+            id="output"
+            isChecked={!!device.state}
+            onChange={handleChange}
+            size="lg"
+            colorScheme="teal"
+          />
+        </FormControl>
+
+        <Icon
+          as={device.state ? BsLightningChargeFill : BsLightningCharge}
+          color={device.state ? 'cyan' : 'whiteAlpha.600'}
+          w={21}
+          h={21}
         />
-      </FormControl>
+      </Flex>
     </>
   )
 }

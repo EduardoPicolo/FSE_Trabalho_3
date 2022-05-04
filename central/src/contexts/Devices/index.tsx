@@ -58,7 +58,7 @@ export const DevicesProvider: React.FC<DevicesProviderProps> = ({
       battery: false,
       inputName: 'teste40',
       outputName: 'teste40',
-      mac: '4000000',
+      mac: '400000040000004000000400000040000004000000',
       room: 'sala40',
       state: 0
     },
@@ -109,14 +109,14 @@ export const DevicesProvider: React.FC<DevicesProviderProps> = ({
     {
       topic: MQTT_TOPICS.DEVICE,
       handler: (msg) => {
-        console.log('Message received: register: ', msg)
+        console.log('Message received: dispositivo: ', msg)
         const mode = msg.payload.mode
 
         if (mode !== 'register' && mode !== 're-register') return
         const mac = msg.topic.split('/')[4]
         setIsFormOpen(true)
         setCurrentMac(mac)
-        //@ts-ignore
+        // @ts-expect-error Ignore harmless error
         delete msg.payload.mode
         setInitialValues({ ...msg.payload, mac } as Device)
       }

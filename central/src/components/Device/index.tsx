@@ -11,6 +11,7 @@ import {
   Tooltip
 } from '@chakra-ui/react'
 
+import { DeleteIcon } from './DeleteIcon'
 import { DHT } from './DHT'
 import { OutputSwitch } from './OutputSwitch'
 
@@ -21,9 +22,26 @@ interface DeviceProps {
 export const Device = ({ device }: DeviceProps) => {
   return (
     <Grid templateRows="auto 1fr">
-      <Text fontSize="md" textTransform="capitalize" color="white">
-        // {device.room}
-      </Text>
+      <Flex justify="space-between" alignItems="flex-end">
+        <Text fontSize="md" textTransform="capitalize" color="white">
+          // {device.room}
+        </Text>
+        {device.battery && (
+          <Tooltip
+            hasArrow
+            label={`Battery mode On`}
+            placement="top"
+            closeOnClick={false}
+            bg="whiteAlpha.800"
+            color="black"
+            openDelay={250}
+          >
+            <Badge variant="solid" colorScheme="purple" color="white">
+              Battery
+            </Badge>
+          </Tooltip>
+        )}
+      </Flex>
       <Flex
         flexDirection="column"
         height="100%"
@@ -31,9 +49,10 @@ export const Device = ({ device }: DeviceProps) => {
         border="1px solid"
         borderColor="whiteAlpha.900"
         padding={3}
+        isTruncated
       >
         <Stat>
-          <StatLabel>
+          <StatLabel display="flex" justifyContent="space-between" gap={2}>
             <Tooltip
               hasArrow
               label={`MAC Address`}
@@ -43,10 +62,12 @@ export const Device = ({ device }: DeviceProps) => {
               color="black"
               openDelay={250}
             >
-              <Badge variant="outline" colorScheme="cyan">
+              <Badge variant="outline" colorScheme="cyan" isTruncated>
                 {device.mac}
               </Badge>
             </Tooltip>
+
+            <DeleteIcon device={device} />
           </StatLabel>
           <StatNumber>
             <Flex
