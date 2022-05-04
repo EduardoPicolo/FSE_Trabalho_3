@@ -5,6 +5,7 @@ import { toast } from 'react-toastify'
 import { ChakraProvider } from '@chakra-ui/react'
 import { NextPageWithLayout } from 'types/next-page'
 
+import { DevicesProvider } from '@contexts/Devices'
 import { BaseLayout } from '@layouts/Base'
 
 import { theme } from '@styles/theme'
@@ -35,19 +36,21 @@ function App({ Component, pageProps }: AppPropsWithLayout) {
       </Head>
 
       <ChakraProvider theme={theme} resetCSS>
-        <NextNprogress
-          color="linear-gradient(
+        <DevicesProvider>
+          <NextNprogress
+            color="linear-gradient(
               to right,
               #00c3ff,
               #b169f3
               )"
-          startPosition={0.4}
-          stopDelayMs={200}
-          height={4}
-          options={nextNprogressOptions}
-          showOnShallow={false}
-        />
-        {getLayout(<Component {...pageProps} />)}
+            startPosition={0.4}
+            stopDelayMs={200}
+            height={4}
+            options={nextNprogressOptions}
+            showOnShallow={false}
+          />
+          {getLayout(<Component {...pageProps} />)}
+        </DevicesProvider>
       </ChakraProvider>
     </>
   )

@@ -1,8 +1,9 @@
 interface Device {
   mac: string
   room: string
+  battery: boolean
   input_name: string
-  output_name: string
+  output_name?: string
 }
 
 type Event = {
@@ -16,7 +17,8 @@ interface RegisterEvent extends Event {
 
 interface ReRegisterEvent extends Event {
   mode: 're-register'
+  battery: boolean
   room: string
   input_name: string
-  output_name: string
+  output_name?: string
 }
