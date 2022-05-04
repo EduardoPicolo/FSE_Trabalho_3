@@ -43,7 +43,7 @@ export const OutputSwitch = ({ device }: OutputSwitchProps) => {
           isChecked={!!device.state}
           onChange={handleChange}
           size="lg"
-          colorScheme="purple"
+          colorScheme="teal"
         />
       </FormControl>
     </>

@@ -7,7 +7,8 @@ import {
   StatHelpText,
   StatLabel,
   StatNumber,
-  Text
+  Text,
+  Tooltip
 } from '@chakra-ui/react'
 
 import { DHT } from './DHT'
@@ -33,9 +34,19 @@ export const Device = ({ device }: DeviceProps) => {
       >
         <Stat>
           <StatLabel>
-            <Badge variant="outline" colorScheme="cyan">
-              {device.mac}
-            </Badge>
+            <Tooltip
+              hasArrow
+              label={`MAC Address`}
+              placement="right"
+              closeOnClick={false}
+              bg="whiteAlpha.800"
+              color="black"
+              openDelay={250}
+            >
+              <Badge variant="outline" colorScheme="cyan">
+                {device.mac}
+              </Badge>
+            </Tooltip>
           </StatLabel>
           <StatNumber>
             <Flex
