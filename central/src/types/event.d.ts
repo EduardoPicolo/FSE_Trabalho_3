@@ -2,6 +2,8 @@ interface Device {
   mac: string
   room: string
   battery: boolean
+  temperature?: number
+  humidity?: number
   inputName: string
   inputState: number
   outputName?: string
@@ -11,6 +13,8 @@ interface Device {
 type DistributedEvent = {
   mode: 'register' | 're-register'
   battery: boolean
+  temperature?: number
+  humidity?: number
 }
 
 interface RegisterEvent extends DistributedEvent {

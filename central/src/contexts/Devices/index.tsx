@@ -60,7 +60,7 @@ export const DevicesProvider: React.FC<DevicesProviderProps> = ({
       battery: false,
       inputName: 'teste40',
       outputName: 'teste40',
-      mac: '400000040000004000000400000040000004000000',
+      mac: '40',
       room: 'sala40',
       state: 0
     },
@@ -110,12 +110,6 @@ export const DevicesProvider: React.FC<DevicesProviderProps> = ({
     }[]
   >([
     {
-      topic: '/esp/test',
-      handler: (msg) => {
-        console.log('Message received aqui: TESTE: ', msg)
-      }
-    },
-    {
       topic: MQTT_TOPICS.DEVICE,
       handler: (msg) => {
         console.log('Message received: dispositivo: ', msg)
@@ -134,12 +128,30 @@ export const DevicesProvider: React.FC<DevicesProviderProps> = ({
       topic: MQTT_TOPICS.TEMPERATURE,
       handler: (msg) => {
         console.log('Message received: temperatura: ', msg)
+        dispatchEvent({
+          type: ACTIONS.UPDATE_DEVICE,
+          payload: {
+            // @ts-expect-error Ignore harmless error
+            mac: msg.payload.mac,
+            // @ts-expect-error Ignore harmless error
+            temperature: msg.payload.temperature
+          }
+        })
       }
     },
     {
       topic: MQTT_TOPICS.HUMIDITY,
       handler: (msg) => {
         console.log('Message received: umidade: ', msg)
+        dispatchEvent({
+          type: ACTIONS.UPDATE_DEVICE,
+          payload: {
+            // @ts-expect-error Ignore harmless error
+            mac: msg.payload.mac,
+            // @ts-expect-error Ignore harmless error
+            humidity: msg.payload.humidity
+          }
+        })
       }
     },
     {

@@ -26,7 +26,7 @@ export const DHT = ({ device }: DHTProps) => {
             marginTop={-1}
           />
           <Text as="span" color="white" fontSize="medium" fontWeight="medium">
-            36°C
+            {device?.temperature || '--'}°C
           </Text>
         </Flex>
       </Tooltip>
@@ -49,7 +49,7 @@ export const DHT = ({ device }: DHTProps) => {
             marginTop={-1}
           />
           <Text as="span" color="white" fontSize="medium" fontWeight="medium">
-            36%
+            {device?.humidity || '--'}%
           </Text>
         </Flex>
       </Tooltip>
