@@ -15,13 +15,12 @@ export const Video = styled.video`
 
 export const Main = styled.main`
   position: relative;
-  display: grid;
-  width: auto;
-  /* min-width: 600px; */
+  /* display: grid; */
+  width: 100%;
   min-height: 85vh;
   padding: 2rem;
   border-radius: 16px;
-  background: rgb(235 235 235 / 40%);
+  background: rgb(35 35 35 / 50%);
   backdrop-filter: blur(15px);
   -webkit-backdrop-filter: blur(15px);
   box-shadow: rgba(0, 0, 0, 0.2) 0px 20px 30px;

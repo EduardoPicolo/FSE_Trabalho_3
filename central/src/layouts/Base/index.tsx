@@ -22,7 +22,7 @@ export const BaseLayout: React.FC<BaseLayoutProps> = ({ children }) => {
         Your browser does not support the video tag. */}
       </S.Video>
 
-      <VStack margin="0 auto" width="fit-content" maxWidth="1440px">
+      <VStack margin="0 auto" width={['90%', '75%']} maxWidth="1440px">
         <Flex justifyContent="space-between" width="100%" px={2} mb={-2}>
           <Text fontSize="xs" color="gray.200" fontWeight="light">
             // Servidor Central

@@ -16,7 +16,9 @@ import { ACTIONS, stateReducer } from './reducer'
 export type DevicesContextType = {
   devices: Device[]
   addDevice: (device: Device) => void
+  updateDevice: (device: Device) => void
   isFormOpen: boolean
+  initialFormValues: Device | undefined
   publishMessages: (topic: Topics, message: string) => void
   toggleForm: (state?: boolean) => void
   currentMac: string
@@ -25,7 +27,9 @@ export type DevicesContextType = {
 export const CentralServerDefaultValues: DevicesContextType = {
   devices: [],
   addDevice: () => ({}),
+  updateDevice: () => ({}),
   isFormOpen: false,
+  initialFormValues: undefined,
   publishMessages: () => ({}),
   toggleForm: () => ({}),
   currentMac: ''
@@ -42,7 +46,30 @@ interface DevicesProviderProps {
 export const DevicesProvider: React.FC<DevicesProviderProps> = ({
   children
 }) => {
-  const [devices, dispatchEvent] = useReducer(stateReducer, [] as Device[])
+  const [isFormOpen, setIsFormOpen] = useState<boolean>(false)
+  const [initialFormValues, setInitialValues] = useState<Device | undefined>(
+    undefined
+  )
+
+  const [currentMac, setCurrentMac] = useState<string>('')
+
+  const [devices, dispatchEvent] = useReducer(stateReducer, [
+    {
+      battery: false,
+      inputName: 'teste40',
+      outputName: 'teste40',
+      mac: '4000000',
+      room: 'sala40',
+      state: 0
+    },
+    {
+      battery: true,
+      inputName: 'teste43',
+      mac: '4333333',
+      room: 'sala43',
+      state: 255
+    }
+  ] as Device[])
   console.log('DevicesProvider: ', devices)
 
   const addDevice = useCallback((device: Device) => {
@@ -50,11 +77,16 @@ export const DevicesProvider: React.FC<DevicesProviderProps> = ({
       type: ACTIONS.ADD_DEVICE,
       payload: device
     })
+    setInitialValues(undefined)
+    setCurrentMac('')
   }, [])
 
-  const [isFormOpen, setIsFormOpen] = useState<boolean>(false)
-
-  const [currentMac, setCurrentMac] = useState<string>('')
+  const updateDevice = useCallback((device: Device) => {
+    dispatchEvent({
+      type: ACTIONS.UPDATE_DEVICE,
+      payload: device
+    })
+  }, [])
 
   const toggleForm = useCallback(
     (state?: boolean) =>
@@ -75,12 +107,18 @@ export const DevicesProvider: React.FC<DevicesProviderProps> = ({
       }
     },
     {
-      topic: MQTT_TOPICS.REGISTER,
+      topic: MQTT_TOPICS.DEVICE,
       handler: (msg) => {
         console.log('Message received: register: ', msg)
-        if (msg.payload.mode !== 'register') return
+        const mode = msg.payload.mode
+
+        if (mode !== 'register' && mode !== 're-register') return
+        const mac = msg.topic.split('/')[4]
         setIsFormOpen(true)
-        setCurrentMac(msg.topic.split('/')[4])
+        setCurrentMac(mac)
+        //@ts-ignore
+        delete msg.payload.mode
+        setInitialValues({ ...msg.payload, mac } as Device)
       }
     },
     {
@@ -122,12 +160,23 @@ export const DevicesProvider: React.FC<DevicesProviderProps> = ({
     () => ({
       devices,
       addDevice,
+      updateDevice,
       isFormOpen,
+      initialFormValues,
       publishMessages,
       toggleForm,
       currentMac
     }),
-    [addDevice, currentMac, devices, isFormOpen, publishMessages, toggleForm]
+    [
+      addDevice,
+      currentMac,
+      devices,
+      initialFormValues,
+      isFormOpen,
+      publishMessages,
+      toggleForm,
+      updateDevice
+    ]
   )
 
   return (

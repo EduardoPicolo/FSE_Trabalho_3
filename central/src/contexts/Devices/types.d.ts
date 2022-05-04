@@ -1,6 +1,6 @@
 type MessageHandlerArgs = {
   topic: string
-  payload: DistributedEvent | RegisterEvent | ReRegisterEvent
+  payload: RegisterEvent | ReRegisterEvent
 }
 
 type MessageHandler = ({ topic, payload }: MessageHandlerArgs) => void

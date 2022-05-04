@@ -93,4 +93,9 @@ const colors = {
   }
 }
 
-export const theme = extendTheme({ colors, fonts })
+export const theme = extendTheme({
+  colors,
+  fonts,
+  initialColorMode: 'dark',
+  useSystemColorMode: false
+})
