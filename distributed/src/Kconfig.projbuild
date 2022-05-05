@@ -1,7 +1,5 @@
 menu "** Project Configuration"
 
-    endchoice
-
     menu "WIFI Configuration"
 
         config ESP_WIFI_SSID

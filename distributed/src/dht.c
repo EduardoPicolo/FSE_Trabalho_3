@@ -4,7 +4,7 @@
 
 #include "esp_log.h"
 
-#include "DHT11.h"
+#include "dht11.h"
 #include "dht.h"
 #include "mqtt.h"
 #include "nvs_util.h"
