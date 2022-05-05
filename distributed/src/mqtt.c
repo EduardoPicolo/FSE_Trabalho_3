@@ -33,6 +33,22 @@
 extern xSemaphoreHandle mqtt_semaphore;
 static esp_mqtt_client_handle_t client;
 
+void _mqtt_subscribe(char *data){
+    if(!nvs_util_get_data().is_registered)
+        nvs_util_set_data(data);
+    else{
+        cJSON *json = cJSON_Parse(data);
+        cJSON *mode = NULL;
+        cJSON *state = NULL;
+        mode = cJSON_GetObjectItem(json, "mode");
+        state = cJSON_GetObjectItem(json, "state");
+        if(mode != NULL && strcmp(mode->valuestring, "unregister") == 0)
+            nvs_util_clear_data();
+        else if(state != NULL)
+            out_device_set_state(json_util_get_state(data));
+    }
+}
+
 static esp_err_t mqtt_event_handler_(esp_mqtt_event_handle_t event){
     switch (event->event_id) {
         case MQTT_EVENT_CONNECTED:
@@ -57,10 +73,7 @@ static esp_err_t mqtt_event_handler_(esp_mqtt_event_handle_t event){
             printf("TOPIC=%.*s\r\n", event->topic_len, event->topic);
             printf("DATA=%.*s\r\n", event->data_len, event->data);
             event->data[event->data_len] = '\0';
-            if(!nvs_util_get_data().is_registered)
-                nvs_util_set_data(event->data);
-            else
-                out_device_set_state(json_util_get_state(event->data));
+            _mqtt_subscribe(event->data);
             break;
         case MQTT_EVENT_ERROR:
             ESP_LOGI(TAG, "MQTT_EVENT_ERROR");
@@ -91,7 +104,7 @@ void mqtt_pub(char * topic, char * msg){
     ESP_LOGI(TAG, "pub message: %d on topic: %s", message_id, topic);
 }
 
-void mqtt_sub(char * topic, char * msg){
+void mqtt_sub(char * topic){
     int message_id = esp_mqtt_client_subscribe(client, topic, 0);
     ESP_LOGI(TAG, "sub message: %d on topic: %s", message_id, topic);
 }
