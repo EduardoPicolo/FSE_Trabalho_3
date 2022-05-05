@@ -64,15 +64,26 @@ export const DevicesProvider: React.FC<DevicesProviderProps> = ({
   )
 
   const [devices, dispatchEvent] = useReducer(stateReducer, [
-    // {
-    //   battery: false,
-    //   inputName: 'inputName',
-    //   outputName: 'outputName',
-    //   mac: '49',
-    //   room: 'sala49',
-    //   inputState: 0,
-    //   outputState: 0
-    // },
+    {
+      battery: true,
+      inputName: 'inputName',
+      outputName: 'outputName',
+      mac: '49',
+      room: 'sala49',
+      inputState: 0,
+      outputState: 0,
+      alarm: true
+    },
+    {
+      battery: false,
+      inputName: 'inputName',
+      outputName: 'outputName',
+      mac: '50',
+      room: 'sala50',
+      inputState: 0,
+      outputState: 0,
+      alarm: false
+    }
   ] as Device[])
 
   const addDevice = useCallback((device: Device) => {
@@ -123,18 +134,64 @@ export const DevicesProvider: React.FC<DevicesProviderProps> = ({
       handler: (msg) => {
         console.log('Message received: dispositivo: ', msg)
         const mode = msg.payload.mode
+        const mac = msg.topic.split('/')[4]
+
+        // if (mode === 'unregister') {
+        //   dispatchEvent({
+        //     type: ACTIONS.REMOVE_DEVICE,
+        //     payload: {
+        //       mac
+        //     }
+        //   })
+
+        //   return
+        // }
+
+        switch (mode) {
+          case 'unregister':
+            dispatchEvent({
+              type: ACTIONS.REMOVE_DEVICE,
+              payload: {
+                mac
+              }
+            })
+            break
+          case 'register': {
+            toast.info(`ESP ${mac} Detected`)
+            setIsFormOpen(true)
+            setCurrentMac(mac)
+            break
+          }
+          case 're-register': {
+            // @ts-expect-error Ignore harmless error
+            delete msg.payload.mode
+            dispatchEvent({
+              type: ACTIONS.ADD_DEVICE,
+              payload: {
+                ...msg.payload,
+                inputState: 0,
+                outputState: 0,
+                mac
+              } as Device
+            })
+            // setInitialValues({ ...msg.payload, inputState: 0, mac } as Device)
+            break
+          }
+          default:
+            break
+        }
+
         if (mode !== 'register' && mode !== 're-register') return
 
-        const mac = msg.topic.split('/')[4]
-        toast.info(`ESP ${mac} Detected`)
-        setIsFormOpen(true)
-        setCurrentMac(mac)
-
-        // @ts-expect-error Ignore harmless error
-        delete msg.payload.mode
-        setInitialValues({ ...msg.payload, inputState: 0, mac } as Device)
-
         addLogEntry('DEVICE', mode, mac)
+
+        // toast.info(`ESP ${mac} Detected`)
+        // setIsFormOpen(true)
+        // setCurrentMac(mac)
+
+        // // @ts-expect-error Ignore harmless error
+        // delete msg.payload.mode
+        // setInitialValues({ ...msg.payload, inputState: 0, mac } as Device)
       }
     },
     {

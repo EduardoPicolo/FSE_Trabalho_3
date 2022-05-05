@@ -8,17 +8,18 @@ interface Device {
   inputState: number
   outputName?: string
   outputState?: number
+  alarm?: boolean
 }
 
 type DistributedEvent = {
-  mode: 'register' | 're-register'
+  mode: 'register' | 're-register' | 'unregister'
   battery: boolean
   temperature?: number
   humidity?: number
 }
 
 interface RegisterEvent extends DistributedEvent {
-  mode: 'register'
+  mode: 'register' | 'unregister'
 }
 
 interface ReRegisterEvent extends DistributedEvent {

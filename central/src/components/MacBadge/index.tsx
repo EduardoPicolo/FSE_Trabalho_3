@@ -19,6 +19,7 @@ export const MacBadge = ({ mac }: Props) => {
         variant="outline"
         colorScheme="cyan"
         fontWeight="medium"
+        letterSpacing={1}
         isTruncated
       >
         {mac}

@@ -1,6 +1,7 @@
 import { SunIcon } from '@chakra-ui/icons'
 import {
   Badge,
+  Box,
   Flex,
   Grid,
   Stat,
@@ -11,6 +12,7 @@ import {
   Tooltip
 } from '@chakra-ui/react'
 
+import { Alarm } from '@components/Alarm'
 import { MacBadge } from '@components/MacBadge'
 
 import { DeleteIcon } from './DeleteIcon'
@@ -28,21 +30,25 @@ export const Device = ({ device }: DeviceProps) => {
         <Text fontSize="md" textTransform="capitalize" color="white">
           // {device.room}
         </Text>
-        {device.battery && (
-          <Tooltip
-            hasArrow
-            label={`Battery mode On`}
-            placement="top"
-            closeOnClick={false}
-            bg="whiteAlpha.800"
-            color="black"
-            openDelay={250}
-          >
-            <Badge variant="solid" colorScheme="purple" color="white">
-              Battery
-            </Badge>
-          </Tooltip>
-        )}
+        <Box>
+          {device.alarm ? <Alarm device={device} /> : null}
+
+          {device.battery ? (
+            <Tooltip
+              hasArrow
+              label={`Battery mode On`}
+              placement="top"
+              closeOnClick={false}
+              bg="whiteAlpha.800"
+              color="black"
+              openDelay={250}
+            >
+              <Badge variant="solid" colorScheme="purple" color="white" ml={1}>
+                Battery
+              </Badge>
+            </Tooltip>
+          ) : null}
+        </Box>
       </Flex>
       <Flex
         flexDirection="column"

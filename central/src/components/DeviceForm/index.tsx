@@ -3,6 +3,7 @@ import { useForm } from 'react-hook-form'
 import {
   Box,
   Button,
+  Checkbox,
   FormControl,
   FormErrorMessage,
   FormLabel,
@@ -18,6 +19,7 @@ type FormValues = {
   inputName: string
   outputName?: string
   state?: number
+  alarm?: boolean
 }
 
 export const DeviceForm = () => {
@@ -65,7 +67,7 @@ export const DeviceForm = () => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <FormControl isInvalid={Object.keys(errors).length > 0} isRequired>
+      <FormControl isInvalid={Object.keys(errors).length > 0}>
         <Stack spacing={4}>
           <Box>
             <FormLabel htmlFor="room" margin={0}>
@@ -80,6 +82,7 @@ export const DeviceForm = () => {
               })}
               variant="flushed"
               isInvalid={!!errors?.room}
+              disabled={!!initialFormValues?.room}
               autoComplete="off"
             />
             <FormErrorMessage>
@@ -133,6 +136,21 @@ export const DeviceForm = () => {
               </FormErrorMessage>
             </Box>
           )}
+
+          <Box>
+            <FormLabel htmlFor="alarm" margin={0}>
+              Alarm
+            </FormLabel>
+            <Checkbox
+              id="alarm"
+              {...register('alarm', {
+                required: false
+              })}
+              disabled={!!initialFormValues?.alarm}
+            >
+              Checkbox
+            </Checkbox>
+          </Box>
         </Stack>
       </FormControl>
 
