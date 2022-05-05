@@ -26,7 +26,7 @@ menu "** Project Configuration"
         
         config ESP_MQTT_BASE_TOPIC
             string "Base topic"
-            default "fse2021/123456789"
+            default "/fse2021/180122258"
 
     endmenu
 
