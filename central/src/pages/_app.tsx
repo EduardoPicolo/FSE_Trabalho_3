@@ -33,7 +33,7 @@ function App({ Component, pageProps }: AppPropsWithLayout) {
   return (
     <>
       <Head>
-        <title>FSE Trabalho 2</title>
+        <title>FSE Trabalho Final</title>
       </Head>
 
       <ChakraProvider theme={theme} resetCSS>

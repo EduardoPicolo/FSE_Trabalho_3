@@ -17,6 +17,9 @@ type Action = {
 export const stateReducer = (state: State, action: Action): State => {
   switch (action.type) {
     case 'ADD_DEVICE': {
+      if (state.find((device) => device.mac === action.payload.mac))
+        return state
+
       toast.success('Device added')
 
       return [...state, action.payload]
