@@ -7,6 +7,7 @@ import React, {
   useRef,
   useState
 } from 'react'
+import { toast } from 'react-toastify'
 
 import { MQTT_TOPICS, Topics } from '@constants/topics'
 import { client, useMqttConnect } from '@hooks/useMQTTconnect'
@@ -79,10 +80,10 @@ export const DevicesProvider: React.FC<DevicesProviderProps> = ({
   const [devices, dispatchEvent] = useReducer(stateReducer, [
     {
       battery: false,
-      inputName: 'teste40',
-      outputName: 'teste40',
-      mac: '40',
-      room: 'sala40',
+      inputName: 'inputName',
+      outputName: 'outputName',
+      mac: '49',
+      room: 'sala49',
       inputState: 0,
       outputState: 0
     }
@@ -137,9 +138,10 @@ export const DevicesProvider: React.FC<DevicesProviderProps> = ({
       handler: (msg) => {
         console.log('Message received: dispositivo: ', msg)
         const mode = msg.payload.mode
-
         if (mode !== 'register' && mode !== 're-register') return
+
         const mac = msg.topic.split('/')[4]
+        toast.info(`ESP ${mac} Detected`)
         setIsFormOpen(true)
         setCurrentMac(mac)
 
@@ -189,12 +191,15 @@ export const DevicesProvider: React.FC<DevicesProviderProps> = ({
       handler: (msg) => {
         console.log('Message received: estado: ', msg)
         if (msg.payload.mode !== 'update') return
-        console.log('UPDATE DEVICE', msg.payload.state)
+
+        const mac = msg.payload.mac
+
         dispatchEvent({
           type: ACTIONS.UPDATE_DEVICE,
-          payload: { mac: msg.payload.mac, inputState: msg.payload.state }
+          payload: { mac, inputState: msg.payload.state }
         })
-        addLogEntry('STATE', msg.payload.state, msg.payload.mac)
+
+        addLogEntry('STATE', msg.payload.state, mac)
       }
     }
   ])

@@ -21,8 +21,9 @@ const nextNprogressOptions = {
 }
 
 toast.configure({
-  autoClose: 3000,
-  position: 'top-right'
+  autoClose: 2500,
+  position: 'top-right',
+  theme: 'dark'
 })
 
 function App({ Component, pageProps }: AppPropsWithLayout) {

@@ -92,6 +92,7 @@ export const DeviceForm = () => {
                 })}
                 variant="flushed"
                 isInvalid={!!errors?.room}
+                autoComplete="off"
               />
               <FormErrorMessage>
                 {errors?.room && errors.room.message}
@@ -112,6 +113,7 @@ export const DeviceForm = () => {
                 variant="flushed"
                 isInvalid={!!errors?.inputName}
                 disabled={!!initialFormValues?.inputName}
+                autoComplete="off"
               />
               <FormErrorMessage>
                 {errors?.inputName && errors.inputName.message}
@@ -136,6 +138,7 @@ export const DeviceForm = () => {
                   variant="flushed"
                   isInvalid={!!errors?.outputName}
                   disabled={!!initialFormValues?.outputName}
+                  autoComplete="off"
                 />
                 <FormErrorMessage>
                   {errors?.outputName && errors.outputName.message}
