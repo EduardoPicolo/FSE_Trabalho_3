@@ -2,10 +2,16 @@
 
 Repositório para o trabalho 3 da disciplina de Fundamentos de Sistemas Embarcados (FGA-UnB). Enunciado pode ser encontrado neste [link](https://gitlab.com/fse_fga/trabalhos-2021_2/trabalho-final-2021-2).
 
-### Vídeo de apresentação do trabalho:
+### Vídeo de demonstração do projeto:
 
-[![](image\central-app.png)](https://www.youtube.com/watch?v=-tsbLOtPlkI)
+[![Vídeo de demonstrção do projeto](./image/central-app.png)](https://www.youtube.com/watch?v=-tsbLOtPlkI "FSE Trabalho 3")
 
+***Observações:***
+
+O projeto utiliza o broker público: ```broker.hivemq.com```
+
+- TCP Port: ```1883```
+- Websocket Port: ```8000```
 
 ## Como executar o projeto
 
@@ -20,6 +26,12 @@ Atualize os submódulos do projeto:
 ```bash
 git submodule init
 git submodule update
+```
+
+Ou apenas utilize:
+
+```bash
+git clone --recurse-submodules https://github.com/igorq937/FSE_Trabalho_3.git
 ```
 
 ## Executando Servidor Central
@@ -64,7 +76,7 @@ cd distributed
 code .
 ```
 
-Primeiramente acesse o menu de configuração para atualizar os dados da conexão wifi disponível.
+Primeiramente acesse o menu de configuração (```Run Menucofig```) para atualizar os dados da conexão wifi.
 
 O menu de configuração do projeto é ```** Project Configuration  --->```
 
