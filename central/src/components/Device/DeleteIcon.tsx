@@ -14,7 +14,7 @@ export const DeleteIcon = ({ device }: DeleteIconProps) => {
 
   const handleClick = useCallback(() => {
     publishMessages(
-      ('/fse2021/180122258/dipositivos/' + device.mac) as MQTT_TOPICS.DEVICE,
+      ('/fse2021/180122258/dispositivos/' + device.mac) as MQTT_TOPICS.DEVICE,
       JSON.stringify({ mode: 'unregister' })
     )
     removeDevice(device)

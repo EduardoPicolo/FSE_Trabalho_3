@@ -15,9 +15,10 @@ export const Video = styled.video`
 
 export const Main = styled.main`
   position: relative;
-  /* display: grid; */
   width: 100%;
   min-height: 85vh;
+  max-height: 85vh;
+  overflow-y: auto;
   padding: 2rem;
   border-radius: 16px;
   background: rgb(35 35 35 / 50%);

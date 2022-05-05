@@ -49,7 +49,7 @@ export const Device = ({ device }: DeviceProps) => {
         height="100%"
         gap={2}
         border="1px solid"
-        borderColor="whiteAlpha.900"
+        borderColor="whiteAlpha.700"
         padding={3}
         isTruncated
       >

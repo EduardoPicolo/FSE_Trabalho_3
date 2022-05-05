@@ -22,7 +22,7 @@ export const DHT = ({ device }: DHTProps) => {
             as={BsThermometerHalf}
             w={21}
             h={21}
-            color="cyan.500"
+            color={device?.temperature ? 'cyan.500' : 'whiteAlpha.600'}
             marginTop={-1}
           />
           <Text as="span" color="white" fontSize="medium" fontWeight="medium">
@@ -45,7 +45,7 @@ export const DHT = ({ device }: DHTProps) => {
             as={BsDropletHalf}
             w={21}
             h={21}
-            color="cyan.500"
+            color={device?.humidity ? 'cyan.500' : 'whiteAlpha.600'}
             marginTop={-1}
           />
           <Text as="span" color="white" fontSize="medium" fontWeight="medium">

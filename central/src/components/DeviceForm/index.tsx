@@ -49,7 +49,7 @@ export const DeviceForm = () => {
     (data: FormValues) => {
       console.log(data)
       publishMessages(
-        ('/fse2021/180122258/dipositivos/' + currentMac) as MQTT_TOPICS.DEVICE,
+        ('/fse2021/180122258/dispositivos/' + currentMac) as MQTT_TOPICS.DEVICE,
         JSON.stringify({ ...data, state: 0 })
       )
       addDevice({

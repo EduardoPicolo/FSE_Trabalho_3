@@ -19,11 +19,11 @@ export const BaseLayout: React.FC<BaseLayoutProps> = ({ children }) => {
     <Box minHeight="100vh" padding={['2', '4', '8', '10']}>
       <S.Video autoPlay playsInline muted loop poster="/img/background.png">
         {/* <source src="/video/graph.webm" type="video/webm" />
-        <source src="/video/graph.mp4" type="video/mp4" />
-        Your browser does not support the video tag. */}
+        <source src="/video/graph.mp4" type="video/mp4" /> */}
+        Your browser does not support the video tag.
       </S.Video>
 
-      <VStack margin="0 auto" width={['90%', '75%']} maxWidth="1440px">
+      <VStack margin="0 auto" width={['90%', '70%']} maxWidth="1440px">
         <Flex justifyContent="space-between" width="100%" px={2} mb={-2}>
           <Text fontSize="xs" color="gray.200" fontWeight="light">
             // Servidor Central

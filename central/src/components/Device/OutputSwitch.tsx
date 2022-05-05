@@ -28,7 +28,7 @@ export const OutputSwitch = ({ device }: OutputSwitchProps) => {
       updateDevice(updatedDevice)
 
       publishMessages(
-        ('/fse2021/180122258/dipositivos/' + device.mac) as MQTT_TOPICS.DEVICE,
+        ('/fse2021/180122258/dispositivos/' + device.mac) as MQTT_TOPICS.DEVICE,
         JSON.stringify({
           mode: 'update',
           state: updatedDevice.outputState
@@ -41,7 +41,7 @@ export const OutputSwitch = ({ device }: OutputSwitchProps) => {
 
   return (
     <>
-      <Divider backgroundColor="whiteAlpha.900" />
+      <Divider backgroundColor="whiteAlpha.100" />
 
       <Flex alignItems="center">
         <FormControl display="flex" alignItems="center">
