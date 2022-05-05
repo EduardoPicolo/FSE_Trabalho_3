@@ -8,6 +8,7 @@
 #include "mqtt.h"
 #include "nvs_util.h"
 #include "json_util.h"
+#include "util.h"
 
 
 static nvs_data_s *nvs_data = NULL;
@@ -19,7 +20,6 @@ void nvs_util_reset_data(void){
     nvs_data->input_name[0] = '\0';
     nvs_data->output_name[0] = '\0';
     nvs_data->alarm = 0;
-    nvs_data->battery = 0;
 }
 
 void nvs_util_setup(void){
@@ -34,7 +34,6 @@ void nvs_util_register_setup(void){
 
     uint8_t mac[6];
     esp_read_mac(mac, ESP_MAC_WIFI_STA);
-
     char mac_str[18];
     sprintf(mac_str, MACSTR, MAC2STR(mac));
     char register_topic[64];
@@ -47,11 +46,12 @@ void nvs_util_register_setup(void){
 
         mqtt_pub(register_topic, cJSON_Print(pub_json));
 
-        char msg[128];
-        mqtt_sub(register_topic, msg);
     }else{
+        unregister_esp();
         mqtt_pub(register_topic, cJSON_Print(json_util_re_register(*nvs_data)));
     }
+
+    mqtt_sub(register_topic);
 }
 
 nvs_data_s nvs_util_get_data(void){
@@ -67,29 +67,42 @@ void nvs_util_set_data(char *string){
     cJSON *mode = cJSON_GetObjectItem(json, "mode");
     if(mode == NULL) return;
 
+
     if(strcmp(mode->valuestring, "register-esp") == 0){
+        ESP_LOGI(TAG, "nvs_util_set_data: mode: %s", mode->valuestring);
 
         cJSON *room = cJSON_GetObjectItem(json, "room");
-        if(room == NULL) return;
+        if(room == NULL){
+            ESP_LOGI(TAG, "nvs_util_set_data: room: NULL");
+            return;
+        }
 
         cJSON *input_name = cJSON_GetObjectItem(json, "inputName");
-        if(input_name == NULL) return;
+        if(input_name == NULL){
+            ESP_LOGI(TAG, "nvs_util_set_data: input_name: NULL");
+            return;
+        }
 
         cJSON *output_name = cJSON_GetObjectItem(json, "outputName");
-        if(output_name == NULL) return;
-
-        cJSON *battery = cJSON_GetObjectItem(json, "battery");
-        if(battery == NULL) return;
+        if(output_name == NULL){
+            ESP_LOGI(TAG, "nvs_util_set_data: output_name: NULL");
+            return;
+        }
 
         cJSON *alarm = cJSON_GetObjectItem(json, "alarm");
-        if(alarm == NULL) return;
+        if(alarm == NULL){
+            ESP_LOGI(TAG, "nvs_util_set_data: alarm: NULL");
+            return;
+        }
 
         nvs_data->is_registered = true;
         strcpy(nvs_data->room, room->valuestring);
         strcpy(nvs_data->input_name, input_name->valuestring);
         strcpy(nvs_data->output_name, output_name->valuestring);
         nvs_data->alarm = alarm->valueint;
-        nvs_data->battery = battery->valueint;
+
+        ESP_LOGI(TAG, "nvs_util_set_data: room: %s", room->valuestring);
+
     }
 
     write_struct("nvs_data", nvs_data, sizeof(nvs_data_s));
@@ -99,6 +112,5 @@ void nvs_util_set_data(char *string){
 void nvs_util_clear_data(void){
     nvs_util_reset_data();
     write_struct("nvs_data", nvs_data, sizeof(nvs_data_s));
-    read_struct("nvs_data", &nvs_data, sizeof(nvs_data_s));
     ESP_LOGI(TAG, "nvs_util_clear_data: %s", nvs_data->room);
 }
