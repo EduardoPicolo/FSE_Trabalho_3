@@ -9,6 +9,7 @@ interface Device {
   outputName?: string
   outputState?: number
   alarm?: boolean
+  dimmable?: boolean
 }
 
 type DistributedEvent = {

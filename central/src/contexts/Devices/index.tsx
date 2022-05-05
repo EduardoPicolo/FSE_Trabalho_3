@@ -82,7 +82,19 @@ export const DevicesProvider: React.FC<DevicesProviderProps> = ({
     //   room: 'sala50',
     //   inputState: 0,
     //   outputState: 0,
-    //   alarm: false
+    //   alarm: false,
+    //   dimmable: true
+    // },
+    // {
+    //   battery: false,
+    //   inputName: 'inputName',
+    //   outputName: 'outputName',
+    //   mac: '51',
+    //   room: 'sala50',
+    //   inputState: 0,
+    //   outputState: 0,
+    //   alarm: true,
+    //   dimmable: false
     // }
   ] as Device[])
 

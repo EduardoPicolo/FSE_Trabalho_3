@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo } from 'react'
-import { useForm } from 'react-hook-form'
+import { FormProvider, useForm } from 'react-hook-form'
 import {
   Box,
   Button,
@@ -14,7 +14,9 @@ import {
 import { MQTT_TOPICS } from '@constants/topics'
 import { useDevices } from '@contexts/Devices'
 
-type FormValues = {
+import { OutputForm } from './OutputForm'
+
+export type FormValues = {
   room: string
   inputName: string
   outputName?: string
@@ -31,14 +33,16 @@ export const DeviceForm = () => {
     initialFormValues
   } = useDevices()
 
+  const methods = useForm<FormValues>({
+    defaultValues: useMemo(() => initialFormValues, [initialFormValues])
+  })
+
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
     reset
-  } = useForm<FormValues>({
-    defaultValues: useMemo(() => initialFormValues, [initialFormValues])
-  })
+  } = methods
 
   useEffect(() => {
     reset(initialFormValues)
@@ -66,104 +70,80 @@ export const DeviceForm = () => {
   )
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <FormControl isInvalid={Object.keys(errors).length > 0}>
-        <Stack spacing={4}>
-          <Box>
-            <FormLabel htmlFor="room" margin={0}>
-              Room
-            </FormLabel>
-            <Input
-              id="room"
-              placeholder="Room"
-              {...register('room', {
-                required: 'This is required',
-                minLength: { value: 3, message: 'Minimum length should be 3' }
-              })}
-              variant="flushed"
-              isInvalid={!!errors?.room}
-              disabled={!!initialFormValues?.room}
-              autoComplete="off"
-            />
-            <FormErrorMessage>
-              {errors?.room && errors.room.message}
-            </FormErrorMessage>
-          </Box>
-
-          <Box>
-            <FormLabel htmlFor="inputName" margin={0}>
-              Input Device Name
-            </FormLabel>
-            <Input
-              id="inputName"
-              placeholder="Input Device Name"
-              {...register('inputName', {
-                required: 'This is required',
-                minLength: { value: 3, message: 'Minimum length should be 3' }
-              })}
-              variant="flushed"
-              isInvalid={!!errors?.inputName}
-              disabled={!!initialFormValues?.inputName}
-              autoComplete="off"
-            />
-            <FormErrorMessage>
-              {errors?.inputName && errors.inputName.message}
-            </FormErrorMessage>
-          </Box>
-
-          {!initialFormValues?.battery && (
+    <FormProvider {...methods}>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <FormControl isInvalid={Object.keys(errors).length > 0}>
+          <Stack spacing={4}>
             <Box>
-              <FormLabel htmlFor="outputName" margin={0}>
-                Output Device name
+              <FormLabel htmlFor="room" margin={0}>
+                Room
               </FormLabel>
               <Input
-                id="outputName"
-                placeholder="Output Device Name"
-                {...register('outputName', {
+                id="room"
+                placeholder="Room"
+                {...register('room', {
                   required: 'This is required',
-                  minLength: {
-                    value: 3,
-                    message: 'Minimum length should be 3'
-                  }
+                  minLength: { value: 3, message: 'Minimum length should be 3' }
                 })}
                 variant="flushed"
-                isInvalid={!!errors?.outputName}
-                disabled={!!initialFormValues?.outputName}
+                isInvalid={!!errors?.room}
+                disabled={!!initialFormValues?.room}
                 autoComplete="off"
               />
               <FormErrorMessage>
-                {errors?.outputName && errors.outputName.message}
+                {errors?.room && errors.room.message}
               </FormErrorMessage>
             </Box>
-          )}
 
-          <Box>
-            <FormLabel htmlFor="alarm" margin={0}>
-              Alarm
-            </FormLabel>
-            <Checkbox
-              id="alarm"
-              {...register('alarm', {
-                required: false
-              })}
-              disabled={!!initialFormValues?.alarm}
-            >
-              Checkbox
-            </Checkbox>
-          </Box>
-        </Stack>
-      </FormControl>
+            <Box>
+              <FormLabel htmlFor="inputName" margin={0}>
+                Input Device Name
+              </FormLabel>
+              <Input
+                id="inputName"
+                placeholder="Input Device Name"
+                {...register('inputName', {
+                  required: 'This is required',
+                  minLength: { value: 3, message: 'Minimum length should be 3' }
+                })}
+                variant="flushed"
+                isInvalid={!!errors?.inputName}
+                disabled={!!initialFormValues?.inputName}
+                autoComplete="off"
+              />
+              <FormErrorMessage>
+                {errors?.inputName && errors.inputName.message}
+              </FormErrorMessage>
+            </Box>
 
-      <Button
-        mt={8}
-        colorScheme="teal"
-        isLoading={isSubmitting}
-        type="submit"
-        size="lg"
-        isFullWidth
-      >
-        Submit
-      </Button>
-    </form>
+            {!initialFormValues?.battery && <OutputForm />}
+
+            <Box>
+              <Checkbox
+                id="alarm"
+                {...register('alarm', {
+                  required: false
+                })}
+                disabled={!!initialFormValues?.alarm}
+                fontWeight="medium"
+              >
+                Alarm
+              </Checkbox>
+            </Box>
+          </Stack>
+        </FormControl>
+
+        <Button
+          mt={8}
+          colorScheme="teal"
+          isLoading={isSubmitting}
+          type="submit"
+          size="lg"
+          isFullWidth
+        >
+          Submit
+        </Button>
+      </form>
+    </FormProvider>
   )
 }
