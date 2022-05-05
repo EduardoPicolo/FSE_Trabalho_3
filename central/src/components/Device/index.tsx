@@ -11,6 +11,8 @@ import {
   Tooltip
 } from '@chakra-ui/react'
 
+import { MacBadge } from '@components/MacBadge'
+
 import { DeleteIcon } from './DeleteIcon'
 import { DHT } from './DHT'
 import { OutputSwitch } from './OutputSwitch'
@@ -53,19 +55,7 @@ export const Device = ({ device }: DeviceProps) => {
       >
         <Stat>
           <StatLabel display="flex" justifyContent="space-between" gap={2}>
-            <Tooltip
-              hasArrow
-              label={`MAC Address`}
-              placement="right"
-              closeOnClick={false}
-              bg="whiteAlpha.800"
-              color="black"
-              openDelay={250}
-            >
-              <Badge variant="outline" colorScheme="cyan" isTruncated>
-                {device.mac}
-              </Badge>
-            </Tooltip>
+            <MacBadge mac={device.mac} />
 
             <DeleteIcon device={device} />
           </StatLabel>

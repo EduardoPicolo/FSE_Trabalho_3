@@ -9,7 +9,6 @@ import {
   Input,
   Stack
 } from '@chakra-ui/react'
-import { Modal } from 'Modal'
 
 import { MQTT_TOPICS } from '@constants/topics'
 import { useDevices } from '@contexts/Devices'
@@ -67,98 +66,88 @@ export const DeviceForm = () => {
   )
 
   return (
-    <Modal
-      title="Register a new device"
-      isOpen={isFormOpen}
-      onClose={() => {}}
-      closeOnOverlayClick={false}
-      onOverlayClick={trigger}
-      size="md"
-      isCentered
-    >
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <FormControl isInvalid={Object.keys(errors).length > 0} isRequired>
-          <Stack spacing={4}>
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <FormControl isInvalid={Object.keys(errors).length > 0} isRequired>
+        <Stack spacing={4}>
+          <Box>
+            <FormLabel htmlFor="room" margin={0}>
+              Room
+            </FormLabel>
+            <Input
+              id="room"
+              placeholder="Room"
+              {...register('room', {
+                required: 'This is required',
+                minLength: { value: 3, message: 'Minimum length should be 3' }
+              })}
+              variant="flushed"
+              isInvalid={!!errors?.room}
+              autoComplete="off"
+            />
+            <FormErrorMessage>
+              {errors?.room && errors.room.message}
+            </FormErrorMessage>
+          </Box>
+
+          <Box>
+            <FormLabel htmlFor="inputName" margin={0}>
+              Input Device Name
+            </FormLabel>
+            <Input
+              id="inputName"
+              placeholder="Input Device Name"
+              {...register('inputName', {
+                required: 'This is required',
+                minLength: { value: 3, message: 'Minimum length should be 3' }
+              })}
+              variant="flushed"
+              isInvalid={!!errors?.inputName}
+              disabled={!!initialFormValues?.inputName}
+              autoComplete="off"
+            />
+            <FormErrorMessage>
+              {errors?.inputName && errors.inputName.message}
+            </FormErrorMessage>
+          </Box>
+
+          {!initialFormValues?.battery && (
             <Box>
-              <FormLabel htmlFor="room" margin={0}>
-                Room
+              <FormLabel htmlFor="outputName" margin={0}>
+                Output Device name
               </FormLabel>
               <Input
-                id="room"
-                placeholder="Room"
-                {...register('room', {
+                id="outputName"
+                placeholder="Output Device Name"
+                {...register('outputName', {
                   required: 'This is required',
-                  minLength: { value: 3, message: 'Minimum length should be 3' }
+                  minLength: {
+                    value: 3,
+                    message: 'Minimum length should be 3'
+                  }
                 })}
                 variant="flushed"
-                isInvalid={!!errors?.room}
+                isInvalid={!!errors?.outputName}
+                disabled={!!initialFormValues?.outputName}
                 autoComplete="off"
               />
               <FormErrorMessage>
-                {errors?.room && errors.room.message}
+                {errors?.outputName && errors.outputName.message}
               </FormErrorMessage>
             </Box>
+          )}
+        </Stack>
+      </FormControl>
 
-            <Box>
-              <FormLabel htmlFor="inputName" margin={0}>
-                Device name
-              </FormLabel>
-              <Input
-                id="inputName"
-                placeholder="Input Device Name"
-                {...register('inputName', {
-                  required: 'This is required',
-                  minLength: { value: 3, message: 'Minimum length should be 3' }
-                })}
-                variant="flushed"
-                isInvalid={!!errors?.inputName}
-                disabled={!!initialFormValues?.inputName}
-                autoComplete="off"
-              />
-              <FormErrorMessage>
-                {errors?.inputName && errors.inputName.message}
-              </FormErrorMessage>
-            </Box>
-
-            {!initialFormValues?.battery && (
-              <Box>
-                <FormLabel htmlFor="outputName" margin={0}>
-                  Device name
-                </FormLabel>
-                <Input
-                  id="outputName"
-                  placeholder="Output Device Name"
-                  {...register('outputName', {
-                    required: 'This is required',
-                    minLength: {
-                      value: 3,
-                      message: 'Minimum length should be 3'
-                    }
-                  })}
-                  variant="flushed"
-                  isInvalid={!!errors?.outputName}
-                  disabled={!!initialFormValues?.outputName}
-                  autoComplete="off"
-                />
-                <FormErrorMessage>
-                  {errors?.outputName && errors.outputName.message}
-                </FormErrorMessage>
-              </Box>
-            )}
-          </Stack>
-        </FormControl>
-
-        <Button
-          mt={8}
-          colorScheme="teal"
-          isLoading={isSubmitting}
-          type="submit"
-          size="lg"
-          isFullWidth
-        >
-          Submit
-        </Button>
-      </form>
-    </Modal>
+      <Button
+        mt={8}
+        colorScheme="teal"
+        isLoading={isSubmitting}
+        type="submit"
+        size="lg"
+        isFullWidth
+      >
+        Submit
+      </Button>
+    </form>
   )
 }
