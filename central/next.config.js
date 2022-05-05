@@ -16,6 +16,9 @@ const nextConfig = (phase, { defaultConfig }) => ({
   },
   eslint: {
     ignoreDuringBuilds: true
+  },
+  experimental: {
+    outputStandalone: true
   }
 })
 
