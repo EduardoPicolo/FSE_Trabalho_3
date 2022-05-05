@@ -22,15 +22,14 @@ export const OutputSwitch = ({ device }: OutputSwitchProps) => {
   const handleChange: ChangeEventHandler<HTMLInputElement> = useCallback(
     (event) => {
       const updatedDevice = {
-        ...device,
+        mac: device.mac,
         outputState: event.target.checked ? 1 : 0
       }
-      updateDevice(updatedDevice)
+      updateDevice(updatedDevice as Device)
 
       publishMessages(
         ('/fse2021/180122258/dispositivos/' + device.mac) as MQTT_TOPICS.DEVICE,
         JSON.stringify({
-          mode: 'update',
           state: updatedDevice.outputState
         })
       )

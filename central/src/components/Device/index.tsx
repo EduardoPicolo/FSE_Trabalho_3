@@ -48,9 +48,9 @@ export const Device = ({ device }: DeviceProps) => {
         flexDirection="column"
         height="100%"
         gap={2}
-        border="1px solid"
+        border="2px solid"
         borderColor="whiteAlpha.700"
-        padding={3}
+        padding={6}
         isTruncated
       >
         <Stat>
@@ -59,7 +59,7 @@ export const Device = ({ device }: DeviceProps) => {
 
             <DeleteIcon device={device} />
           </StatLabel>
-          <StatNumber my={1}>
+          <StatNumber my={1.5}>
             <Flex
               alignItems="center"
               gap={2}
@@ -83,7 +83,7 @@ export const Device = ({ device }: DeviceProps) => {
               </Text>
             </Flex>
           </StatNumber>
-          <StatHelpText display="flex" gap={2}>
+          <StatHelpText display="flex" gap={4}>
             <DHT device={device} />
           </StatHelpText>
         </Stat>

@@ -64,17 +64,16 @@ export const DevicesProvider: React.FC<DevicesProviderProps> = ({
   )
 
   const [devices, dispatchEvent] = useReducer(stateReducer, [
-    {
-      battery: false,
-      inputName: 'inputName',
-      outputName: 'outputName',
-      mac: '49',
-      room: 'sala49',
-      inputState: 0,
-      outputState: 0
-    }
+    // {
+    //   battery: false,
+    //   inputName: 'inputName',
+    //   outputName: 'outputName',
+    //   mac: '49',
+    //   room: 'sala49',
+    //   inputState: 0,
+    //   outputState: 0
+    // },
   ] as Device[])
-  console.log('DevicesProvider: ', logData)
 
   const addDevice = useCallback((device: Device) => {
     dispatchEvent({
@@ -176,15 +175,18 @@ export const DevicesProvider: React.FC<DevicesProviderProps> = ({
       topic: MQTT_TOPICS.STATE,
       handler: (msg) => {
         console.log('Message received: estado: ', msg)
-        if (msg.payload.mode !== 'update') return
+        // if (msg.payload.mode !== 'update') return
 
+        // @ts-expect-error Ignore harmless error
         const mac = msg.payload.mac
 
         dispatchEvent({
           type: ACTIONS.UPDATE_DEVICE,
+          // @ts-expect-error Ignore harmless error
           payload: { mac, inputState: msg.payload.state }
         })
 
+        // @ts-expect-error Ignore harmless error
         addLogEntry('STATE', msg.payload.state, mac)
       }
     }

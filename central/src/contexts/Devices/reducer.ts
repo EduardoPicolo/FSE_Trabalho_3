@@ -41,9 +41,17 @@ export const stateReducer = (state: State, action: Action): State => {
       newState[index] = { ...newState[index], ...rest }
       if (isEqual(newState[index], state[index])) return state
 
-      toast.success(
-        `${newState[index].inputName} ${newDeviceState ? 'ON' : 'OFF'}`
-      )
+      if (rest?.inputState !== undefined)
+        toast.success(
+          `${newState[index].inputName} turned ${newDeviceState ? 'ON' : 'OFF'}`
+        )
+
+      if (rest?.outputState !== undefined)
+        toast.success(
+          `${newState[index].outputName} turned ${
+            newDeviceState ? 'ON' : 'OFF'
+          }`
+        )
 
       return newState
     }

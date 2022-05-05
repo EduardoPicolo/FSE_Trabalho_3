@@ -43,7 +43,7 @@ export const BaseLayout: React.FC<BaseLayoutProps> = ({ children }) => {
             fontWeight="light"
             paddingRight="1.5"
           >
-            // Fundamentos de Sistemas Embarcados - Trabalho 2
+            // Fundamentos de Sistemas Embarcados - Trabalho Final
           </Text>
         </Flex>
       </VStack>
