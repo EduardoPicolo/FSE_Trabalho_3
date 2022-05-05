@@ -64,26 +64,26 @@ export const DevicesProvider: React.FC<DevicesProviderProps> = ({
   )
 
   const [devices, dispatchEvent] = useReducer(stateReducer, [
-    {
-      battery: true,
-      inputName: 'inputName',
-      outputName: 'outputName',
-      mac: '49',
-      room: 'sala49',
-      inputState: 0,
-      outputState: 0,
-      alarm: true
-    },
-    {
-      battery: false,
-      inputName: 'inputName',
-      outputName: 'outputName',
-      mac: '50',
-      room: 'sala50',
-      inputState: 0,
-      outputState: 0,
-      alarm: false
-    }
+    // {
+    //   battery: true,
+    //   inputName: 'inputName',
+    //   outputName: 'outputName',
+    //   mac: '49',
+    //   room: 'sala49',
+    //   inputState: 0,
+    //   outputState: 0,
+    //   alarm: true
+    // },
+    // {
+    //   battery: false,
+    //   inputName: 'inputName',
+    //   outputName: 'outputName',
+    //   mac: '50',
+    //   room: 'sala50',
+    //   inputState: 0,
+    //   outputState: 0,
+    //   alarm: false
+    // }
   ] as Device[])
 
   const addDevice = useCallback((device: Device) => {

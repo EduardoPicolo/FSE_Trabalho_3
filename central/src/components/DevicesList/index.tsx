@@ -10,7 +10,7 @@ export const DevicesList = () => {
     return (
       <>
         <Heading size="lg" color="white" mb={2}>
-          Wating for connections...
+          Waiting for connections...
         </Heading>
         <Progress size="xs" isIndeterminate colorScheme="cyan" />
       </>
