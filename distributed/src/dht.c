@@ -20,6 +20,8 @@ void mqtt_pub_dht(int payload, int key){
     char topic[128];
     cJSON *pub_json = NULL;
 
+    if(!nvs_util_get_data().is_registered) return;
+
     if(key == DHT_TEMPERATURE_KEY){
         pub_json = json_util_pub("temperature", payload);
         sprintf(topic, "%s/%s/%s", CONFIG_ESP_MQTT_BASE_TOPIC, nvs_util_get_data().room, "temperatura");

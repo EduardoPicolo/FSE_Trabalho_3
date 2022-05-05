@@ -10,6 +10,7 @@
 #include "mqtt.h"
 #include "nvs_util.h"
 #include "json_util.h"
+#include "util.h"
 
 #include "in_device.h"
 
@@ -45,7 +46,6 @@ void in_device_isr(void *args){
                 state = !state;
                 gpio_isr_handler_remove(pin);
                 ESP_LOGI(TAG, "Pin %d is pressed", pin);
-                mqtt_pub_in_device(state);
 
                 int count = 0;
                 while(gpio_get_level(pin) == estado){
@@ -53,12 +53,13 @@ void in_device_isr(void *args){
                     if(++count >= 60){
                         ESP_LOGI(TAG, "Pin %d is long pressed", pin);
                         nvs_util_clear_data();
-                        // mqtt_pub(nvs_util_get_mac_topic(), cJSON_Print(json_util_unregister()));
+                        unregister_esp();
                         fflush(stdout);
                         esp_restart();
                     }
                 }
 
+                if(nvs_util_get_data().is_registered) mqtt_pub_in_device(state);
                 ESP_LOGI(TAG, "Pin %d is released", pin);
                 gpio_isr_handler_add(pin, gpio_isr_handler, (void *) pin);
             }

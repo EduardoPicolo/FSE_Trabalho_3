@@ -8,7 +8,6 @@ typedef struct {
     char input_name[32];
     char output_name[32];
     uint8_t alarm;
-    uint8_t battery;
 } nvs_data_s;
 
 void nvs_util_setup(void);

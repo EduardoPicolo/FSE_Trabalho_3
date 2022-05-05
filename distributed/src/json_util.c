@@ -42,11 +42,6 @@ cJSON *json_util_re_register(nvs_data_s nvs_data){
     if(mode == NULL) ESP_LOGE(TAG, "json_re_register failed");
     cJSON_AddItemToObject(data, "mode", mode);
 
-    cJSON *battery = NULL;
-    battery = cJSON_CreateNumber(nvs_data.battery);
-    if(battery == NULL) ESP_LOGE(TAG, "json_register failed");
-    cJSON_AddItemToObject(data, "battery", battery);
-
     cJSON *room = NULL;
     room = cJSON_CreateString(nvs_data.room);
     if(room == NULL) ESP_LOGE(TAG, "json_re_register failed");
@@ -63,7 +58,7 @@ cJSON *json_util_re_register(nvs_data_s nvs_data){
     cJSON_AddItemToObject(data, "outputName", output_name);
 
     cJSON *alarm = NULL;
-    alarm = cJSON_CreateString(nvs_data.alarm);
+    alarm = cJSON_CreateBool(nvs_data.alarm);
     if(alarm == NULL) ESP_LOGE(TAG, "json_re_register failed");
     cJSON_AddItemToObject(data, "alarm", alarm);
 
