@@ -33,3 +33,10 @@ interface UpdateEvent {
   mac: string
   state: number
 }
+
+interface Log {
+  command: string
+  value: unknown
+  esp: string
+  time: string
+}

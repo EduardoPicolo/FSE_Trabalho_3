@@ -23,6 +23,8 @@ export type DevicesContextType = {
   publishMessages: (topic: Topics, message: string) => void
   toggleForm: (state?: boolean) => void
   currentMac: string
+  logData: Log[]
+  addLogEntry: (command: string, value: unknown, device: string) => void
 }
 
 export const CentralServerDefaultValues: DevicesContextType = {
@@ -34,7 +36,9 @@ export const CentralServerDefaultValues: DevicesContextType = {
   initialFormValues: undefined,
   publishMessages: () => ({}),
   toggleForm: () => ({}),
-  currentMac: ''
+  currentMac: '',
+  logData: [],
+  addLogEntry: () => ({})
 }
 
 export const DevicesContext = createContext<DevicesContextType>(
@@ -45,6 +49,12 @@ interface DevicesProviderProps {
   children: React.ReactNode
 }
 
+const logData = [] as Log[]
+
+const setLogData = (data: Log) => {
+  logData.push(data)
+}
+
 export const DevicesProvider: React.FC<DevicesProviderProps> = ({
   children
 }) => {
@@ -52,8 +62,19 @@ export const DevicesProvider: React.FC<DevicesProviderProps> = ({
   const [initialFormValues, setInitialValues] = useState<Device | undefined>(
     undefined
   )
-
   const [currentMac, setCurrentMac] = useState<string>('')
+
+  const addLogEntry = useCallback(
+    (command: string, value: unknown, device: string) => {
+      setLogData({
+        command,
+        value,
+        esp: device,
+        time: new Date().toLocaleString()
+      })
+    },
+    []
+  )
 
   const [devices, dispatchEvent] = useReducer(stateReducer, [
     {
@@ -62,17 +83,11 @@ export const DevicesProvider: React.FC<DevicesProviderProps> = ({
       outputName: 'teste40',
       mac: '40',
       room: 'sala40',
-      state: 0
-    },
-    {
-      battery: true,
-      inputName: 'teste43',
-      mac: '4333333',
-      room: 'sala43',
-      state: 255
+      inputState: 0,
+      outputState: 0
     }
   ] as Device[])
-  console.log('DevicesProvider: ', devices)
+  console.log('DevicesProvider: ', logData)
 
   const addDevice = useCallback((device: Device) => {
     dispatchEvent({
@@ -83,19 +98,27 @@ export const DevicesProvider: React.FC<DevicesProviderProps> = ({
     setCurrentMac('')
   }, [])
 
-  const removeDevice = useCallback((device: Device) => {
-    dispatchEvent({
-      type: ACTIONS.REMOVE_DEVICE,
-      payload: device
-    })
-  }, [])
+  const removeDevice = useCallback(
+    (device: Device) => {
+      dispatchEvent({
+        type: ACTIONS.REMOVE_DEVICE,
+        payload: device
+      })
+      addLogEntry('UNREGISTER', '', device.mac)
+    },
+    [addLogEntry]
+  )
 
-  const updateDevice = useCallback((device: Device) => {
-    dispatchEvent({
-      type: ACTIONS.UPDATE_DEVICE,
-      payload: device
-    })
-  }, [])
+  const updateDevice = useCallback(
+    (device: Device) => {
+      dispatchEvent({
+        type: ACTIONS.UPDATE_DEVICE,
+        payload: device
+      })
+      addLogEntry('UPDATE OUTPUT', device.outputState, device.mac)
+    },
+    [addLogEntry]
+  )
 
   const toggleForm = useCallback(
     (state?: boolean) =>
@@ -119,9 +142,12 @@ export const DevicesProvider: React.FC<DevicesProviderProps> = ({
         const mac = msg.topic.split('/')[4]
         setIsFormOpen(true)
         setCurrentMac(mac)
+
         // @ts-expect-error Ignore harmless error
         delete msg.payload.mode
         setInitialValues({ ...msg.payload, inputState: 0, mac } as Device)
+
+        addLogEntry('DEVICE', mode, mac)
       }
     },
     {
@@ -137,6 +163,8 @@ export const DevicesProvider: React.FC<DevicesProviderProps> = ({
             temperature: msg.payload.temperature
           }
         })
+        // @ts-expect-error Ignore harmless error
+        addLogEntry('TEMPERATURE', msg.payload.temperature, msg.payload.mac)
       }
     },
     {
@@ -152,6 +180,8 @@ export const DevicesProvider: React.FC<DevicesProviderProps> = ({
             humidity: msg.payload.humidity
           }
         })
+        // @ts-expect-error Ignore harmless error
+        addLogEntry('HUMIDITY', msg.payload.humidity, msg.payload.mac)
       }
     },
     {
@@ -164,6 +194,7 @@ export const DevicesProvider: React.FC<DevicesProviderProps> = ({
           type: ACTIONS.UPDATE_DEVICE,
           payload: { mac: msg.payload.mac, inputState: msg.payload.state }
         })
+        addLogEntry('STATE', msg.payload.state, msg.payload.mac)
       }
     }
   ])
@@ -193,7 +224,9 @@ export const DevicesProvider: React.FC<DevicesProviderProps> = ({
       initialFormValues,
       publishMessages,
       toggleForm,
-      currentMac
+      currentMac,
+      logData,
+      addLogEntry
     }),
     [
       addDevice,
@@ -204,7 +237,8 @@ export const DevicesProvider: React.FC<DevicesProviderProps> = ({
       publishMessages,
       removeDevice,
       toggleForm,
-      updateDevice
+      updateDevice,
+      addLogEntry
     ]
   )
 

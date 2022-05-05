@@ -10,7 +10,7 @@ interface DeleteIconProps {
 }
 
 export const DeleteIcon = ({ device }: DeleteIconProps) => {
-  const { publishMessages, removeDevice } = useDevices()
+  const { publishMessages, removeDevice, addLogEntry } = useDevices()
 
   const handleClick = useCallback(() => {
     publishMessages(

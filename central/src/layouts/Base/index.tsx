@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { Box, Flex, Text, VStack } from '@chakra-ui/react'
 
+import { CSVDownload } from '@components/CSVDownload'
 import { formatDate } from '@utils/formatDate'
 
 import * as S from './styles'
@@ -39,15 +40,21 @@ export const BaseLayout: React.FC<BaseLayoutProps> = ({ children }) => {
 
         <S.Main>{children}</S.Main>
 
-        <Text
-          fontSize="xs"
-          color="gray.200"
-          fontWeight="light"
-          paddingRight="1.5"
-          alignSelf="flex-end"
+        <Flex
+          justifyContent="space-between"
+          width="100%"
+          alignItems="flex-start"
         >
-          // Fundamentos de Sistemas Embarcados - Trabalho 2
-        </Text>
+          <CSVDownload />
+          <Text
+            fontSize="xs"
+            color="gray.200"
+            fontWeight="light"
+            paddingRight="1.5"
+          >
+            // Fundamentos de Sistemas Embarcados - Trabalho 2
+          </Text>
+        </Flex>
       </VStack>
     </Box>
   )
