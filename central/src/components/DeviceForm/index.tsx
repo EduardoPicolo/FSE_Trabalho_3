@@ -22,7 +22,6 @@ type FormValues = {
 
 export const DeviceForm = () => {
   const {
-    isFormOpen,
     publishMessages,
     addDevice,
     toggleForm,
@@ -34,8 +33,7 @@ export const DeviceForm = () => {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-    reset,
-    trigger
+    reset
   } = useForm<FormValues>({
     defaultValues: useMemo(() => initialFormValues, [initialFormValues])
   })
@@ -50,7 +48,7 @@ export const DeviceForm = () => {
       console.log(data)
       publishMessages(
         ('/fse2021/180122258/dispositivos/' + currentMac) as MQTT_TOPICS.DEVICE,
-        JSON.stringify({ ...data, state: 0 })
+        JSON.stringify({ ...data, mode: 'register-esp' })
       )
       addDevice({
         inputState: 0,

@@ -59,7 +59,7 @@ export const Device = ({ device }: DeviceProps) => {
 
             <DeleteIcon device={device} />
           </StatLabel>
-          <StatNumber>
+          <StatNumber my={1}>
             <Flex
               alignItems="center"
               gap={2}

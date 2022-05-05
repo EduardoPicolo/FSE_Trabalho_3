@@ -15,7 +15,12 @@ export const MacBadge = ({ mac }: Props) => {
       color="black"
       openDelay={250}
     >
-      <Badge variant="outline" colorScheme="cyan" isTruncated>
+      <Badge
+        variant="outline"
+        colorScheme="cyan"
+        fontWeight="medium"
+        isTruncated
+      >
         {mac}
       </Badge>
     </Tooltip>

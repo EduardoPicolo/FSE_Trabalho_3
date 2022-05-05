@@ -2,11 +2,11 @@ import { useCallback } from 'react'
 import type { NextPage } from 'next'
 import { toast } from 'react-toastify'
 import { Text } from '@chakra-ui/react'
-import { Modal } from 'Modal'
 
 import { DeviceForm } from '@components/DeviceForm'
 import { DevicesList } from '@components/DevicesList'
 import { MacBadge } from '@components/MacBadge'
+import { Modal } from '@components/Modal'
 import { useDevices } from '@contexts/Devices'
 
 const Home: NextPage = () => {
