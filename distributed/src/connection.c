@@ -4,6 +4,7 @@
 #include "esp_event.h"
 #include "esp_log.h"
 #include "freertos/semphr.h"
+#include "freertos/task.h"
 
 #include "wifi.h"
 #include "mqtt.h"

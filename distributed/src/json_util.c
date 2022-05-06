@@ -57,6 +57,11 @@ cJSON *json_util_re_register(nvs_data_s nvs_data){
     if(output_name == NULL) ESP_LOGE(TAG, "json_re_register failed");
     cJSON_AddItemToObject(data, "outputName", output_name);
 
+    cJSON *dimmable = NULL;
+    dimmable = cJSON_CreateBool(nvs_data.dimmable);
+    if(dimmable == NULL) ESP_LOGE(TAG, "json_re_register failed");
+    cJSON_AddItemToObject(data, "dimmable", dimmable);
+
     cJSON *alarm = NULL;
     alarm = cJSON_CreateBool(nvs_data.alarm);
     if(alarm == NULL) ESP_LOGE(TAG, "json_re_register failed");

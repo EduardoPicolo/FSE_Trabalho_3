@@ -1,4 +1,5 @@
 #include <nvs_component.h>
+#include "freertos/semphr.h"
 #include <stdlib.h>
 #include <string.h>
 
@@ -13,20 +14,22 @@
 
 static nvs_data_s *nvs_data = NULL;
 static const char *TAG = "NVS";
+extern xSemaphoreHandle nvs_semaphore;
 
 void nvs_util_reset_data(void){
     nvs_data->is_registered = false;
     nvs_data->room[0] = '\0';
     nvs_data->input_name[0] = '\0';
     nvs_data->output_name[0] = '\0';
+    nvs_data->dimmable = 0;
     nvs_data->alarm = 0;
 }
 
 void nvs_util_setup(void){
     ESP_ERROR_CHECK(nvs_init());
-
     nvs_data = malloc(sizeof(nvs_data_s));
     nvs_util_reset_data();
+    read_struct("nvs_data", &nvs_data, sizeof(nvs_data_s));
 }
 
 void nvs_util_register_setup(void){
@@ -47,8 +50,9 @@ void nvs_util_register_setup(void){
         mqtt_pub(register_topic, cJSON_Print(pub_json));
 
     }else{
-        unregister_esp();
+        // unregister_esp();
         mqtt_pub(register_topic, cJSON_Print(json_util_re_register(*nvs_data)));
+        xSemaphoreGive(nvs_semaphore);
     }
 
     mqtt_sub(register_topic);
@@ -89,6 +93,12 @@ void nvs_util_set_data(char *string){
             return;
         }
 
+        cJSON *dimmable = cJSON_GetObjectItem(json, "dimmable");
+        if(dimmable == NULL){
+            ESP_LOGI(TAG, "nvs_util_set_data: dimmable: NULL");
+            return;
+        }
+
         cJSON *alarm = cJSON_GetObjectItem(json, "alarm");
         if(alarm == NULL){
             ESP_LOGI(TAG, "nvs_util_set_data: alarm: NULL");
@@ -99,14 +109,14 @@ void nvs_util_set_data(char *string){
         strcpy(nvs_data->room, room->valuestring);
         strcpy(nvs_data->input_name, input_name->valuestring);
         strcpy(nvs_data->output_name, output_name->valuestring);
+        nvs_data->dimmable = dimmable->valueint;
         nvs_data->alarm = alarm->valueint;
-
-        ESP_LOGI(TAG, "nvs_util_set_data: room: %s", room->valuestring);
 
     }
 
     write_struct("nvs_data", nvs_data, sizeof(nvs_data_s));
     cJSON_Delete(json);
+    xSemaphoreGive(nvs_semaphore);
 }
 
 void nvs_util_clear_data(void){

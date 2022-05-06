@@ -7,6 +7,7 @@ typedef struct {
     char room[32];
     char input_name[32];
     char output_name[32];
+    uint8_t dimmable;
     uint8_t alarm;
 } nvs_data_s;
 
